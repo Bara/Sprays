@@ -646,7 +646,7 @@ void GetSprays(KeyValues kv, int level = 0, const char[] category = "", const ch
             char sBuffer[PLATFORM_MAX_PATH + 13];
             array.GetString(i, sBuffer, sizeof(sBuffer));
             ExplodeString(sBuffer, ";;", sSplit[i], sizeof(sSplit[]), sizeof(sSplit[][]));
-            LogToFile(g_sLog, "- %s: %s -", sSplit[i][0], sSplit[i][1]);
+            if (g_bDebug) LogToFile(g_sLog, "- %s: %s -", sSplit[i][0], sSplit[i][1]);
         }
 
         AddSpray(name, category, sSplit);
