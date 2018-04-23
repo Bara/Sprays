@@ -92,6 +92,7 @@ public void OnPluginStart()
     FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
     BuildPath(Path_SM, g_sFile, sizeof(g_sFile), "logs/sprays_%s.log", sDate);
     BuildPath(Path_SM, g_sFileAdd, sizeof(g_sFileAdd), "logs/sprays_add_%s.log", sDate);
+    BuildPath(Path_SM, g_sLog, sizeof(g_sLog), "logs/sprays_add_debug_%s.log", sDate);
 
     if (g_aCategories != null)
     {
@@ -203,8 +204,6 @@ void PrepareSpraysConfig()
     
     KeyValues kv = new KeyValues("Sprays");
     kv.ImportFromFile(sFile);
-
-    BuildPath(Path_SM, g_sLog, sizeof(g_sLog), "logs/sprays_%d.log", GetTime());
 
     do
     {
