@@ -306,6 +306,11 @@ void ListCategories(int client)
 
         menu.AddItem(sCat, sCat);
         count++;
+
+        if (g_bDebug)
+        {
+            PrintToChat(client, "Cat: %d, Count: %d", sCat, count);
+        }
     }
     
     menu.ExitButton = true;
