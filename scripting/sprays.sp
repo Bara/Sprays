@@ -11,6 +11,7 @@
 #include <emitsoundany>
 #include <multicolors>
 #include <csgoitems>
+#include <autoexecconfig>
 
 #pragma newdecls required
 
@@ -87,15 +88,20 @@ public void OnPluginStart()
     
     HookEvent("player_spawn", Event_PlayerSpawn);
 
-    g_cTime = CreateConVar("sprays_time", "30", "Time to spray a new spray");
-    g_cVIPTime = CreateConVar("sprays_vip_time", "15", "Time to spray a new spray as vip");
-    g_cDistance = CreateConVar("sprays_distance", "115", "Max. distance from player");
-    g_cUse = CreateConVar("sprays_use", "1", "Spray with '+use'?", _, true, 0.0, true, 1.0);
-    g_cFlag = CreateConVar("sprays_flag", "", "Default flag for sprays");
-    g_cValveFlag = CreateConVar("sprays_valve_flag", "1", "Use VIP Flag to get access to valve sprays?", _, true, 0.0, true, 1.0);
-    g_cVIPFlag = CreateConVar("sprays_vip_flag", "t", "VIP Flag (for valve sprays)");
-    g_cEnableValve = CreateConVar("sprays_enable_valve", "1", "Enable valve sprays?", _, true, 0.0, true, 1.0);
-    g_cEnableCustom = CreateConVar("sprays_enable_custom", "1", "Enable custom sprays?", _, true, 0.0, true, 1.0);
+    AutoExecConfig_SetCreateDirectory(true);
+    AutoExecConfig_SetCreateFile(true);
+    AutoExecConfig_SetFile("plugin.sprays");
+    g_cTime = AutoExecConfig_CreateConVar("sprays_time", "30", "Time to spray a new spray");
+    g_cVIPTime = AutoExecConfig_CreateConVar("sprays_vip_time", "15", "Time to spray a new spray as vip");
+    g_cDistance = AutoExecConfig_CreateConVar("sprays_distance", "115", "Max. distance from player");
+    g_cUse = AutoExecConfig_CreateConVar("sprays_use", "1", "Spray with '+use'?", _, true, 0.0, true, 1.0);
+    g_cFlag = AutoExecConfig_CreateConVar("sprays_flag", "", "Default flag for sprays");
+    g_cValveFlag = AutoExecConfig_CreateConVar("sprays_valve_flag", "1", "Use VIP Flag to get access to valve sprays?", _, true, 0.0, true, 1.0);
+    g_cVIPFlag = AutoExecConfig_CreateConVar("sprays_vip_flag", "t", "VIP Flag (for valve sprays)");
+    g_cEnableValve = AutoExecConfig_CreateConVar("sprays_enable_valve", "1", "Enable valve sprays?", _, true, 0.0, true, 1.0);
+    g_cEnableCustom = AutoExecConfig_CreateConVar("sprays_enable_custom", "1", "Enable custom sprays?", _, true, 0.0, true, 1.0);
+    AutoExecConfig_ExecuteFile();
+    AutoExecConfig_CleanFile();
     
     char sDate[16];
     FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
