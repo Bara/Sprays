@@ -126,6 +126,11 @@ public void CSGOItems_OnItemsSynced()
 
 void AddValveSprays()
 {
+    if (!g_cEnableValve.BoolValue)
+    {
+        return;
+    }
+    
     int count = 0;
     for (int i = 0; i <= CSGOItems_GetSprayCount(); i++)
     {
@@ -208,6 +213,11 @@ public void OnMapStart()
 
 void PrepareSpraysConfig()
 {
+    if (!g_cEnableCustom.BoolValue)
+    {
+        return;
+    }
+
     char sFile[PLATFORM_MAX_PATH + 1];
     BuildPath(Path_SM, sFile, sizeof(sFile), "configs/outbreak/sprays.cfg");
     
