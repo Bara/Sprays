@@ -126,11 +126,6 @@ public void CSGOItems_OnItemsSynced()
 
 void AddValveSprays()
 {
-    if (!g_cEnableValve.BoolValue)
-    {
-        return;
-    }
-
     int count = 0;
     for (int i = 0; i <= CSGOItems_GetSprayCount(); i++)
     {
@@ -222,11 +217,6 @@ void PrepareSpraysConfig()
         return;
     }
 
-    if (!g_cEnableCustom.BoolValue)
-    {
-        return;
-    }
-    
     KeyValues kv = new KeyValues("Sprays");
     kv.ImportFromFile(sFile);
 
