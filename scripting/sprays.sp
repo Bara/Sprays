@@ -1,3 +1,8 @@
+/*
+    ToDo
+        Translations
+*/
+
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -30,7 +35,7 @@ int g_iSpray[MAXPLAYERS + 1] =  { 0, ... };
 int g_iSprays[MAX_SPRAYS][sprayList];
 int g_iCount = 1;
 
-bool g_bDebug = true;
+bool g_bDebug = false;
 
 ConVar g_cDistance = null;
 ConVar g_cTime = null;
@@ -39,6 +44,8 @@ ConVar g_cUse = null;
 ConVar g_cFlag = null;
 ConVar g_cValveFlag = null;
 ConVar g_cVIPFlag = null;
+ConVar g_cEnableValve = null;
+ConVar g_cEnableCustom = null;
 
 Handle g_hCookie = null;
 Handle g_hOnSpray = null;
@@ -87,6 +94,8 @@ public void OnPluginStart()
     g_cFlag = CreateConVar("sprays_flag", "", "Default flag for sprays");
     g_cValveFlag = CreateConVar("sprays_valve_flag", "1", "Use VIP Flag to get access to valve sprays?", _, true, 0.0, true, 1.0);
     g_cVIPFlag = CreateConVar("sprays_vip_flag", "t", "VIP Flag (for valve sprays)");
+    g_cEnableValve = CreateConVar("sprays_enable_valve", "1", "Enable valve sprays?", _, true, 0.0, true, 1.0);
+    g_cEnableCustom = CreateConVar("sprays_enable_custom", "1", "Enable custom sprays?", _, true, 0.0, true, 1.0);
     
     char sDate[16];
     FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
@@ -111,6 +120,11 @@ public void CSGOItems_OnItemsSynced()
 
 void AddValveSprays()
 {
+    if (!g_cEnableValve.BoolValue)
+    {
+        return;
+    }
+
     int count = 0;
     for (int i = 0; i <= CSGOItems_GetSprayCount(); i++)
     {
@@ -201,6 +215,11 @@ void PrepareSpraysConfig()
         LogError("Can't find file: %s", sFile);
         return;
     }
+
+    if (!g_cEnableCustom.BoolValue)
+    {
+        return;
+    }
     
     KeyValues kv = new KeyValues("Sprays");
     kv.ImportFromFile(sFile);
@@ -270,16 +289,39 @@ void ListCategories(int client)
     
     menu.SetTitle("Wähle eine Kategorie:");
     menu.AddItem("0", "Zufälliges Spray");
+
+
+    int count = 0;
     
     for (int i = 0; i < g_aCategories.Length; ++i)
     {
         char sCat[32];
         g_aCategories.GetString(i, sCat, sizeof(sCat));
+
+        if (StrEqual(sCat, "Valve", false) && !g_cEnableValve.BoolValue)
+        {
+            continue;
+        }
+        
+        if (!StrEqual(sCat, "Valve", false) && !g_cEnableCustom.BoolValue)
+        {
+            continue;
+        }
+
         menu.AddItem(sCat, sCat);
+        count++;
     }
     
     menu.ExitButton = true;
-    menu.Display(client, 0);
+
+    if (count > 0)
+    {
+        menu.Display(client, 0);
+    }
+    else
+    {
+        delete menu;
+    }
 }
 
 public int Menu_ListCategories(Handle menu, MenuAction action, int client, int param) 
